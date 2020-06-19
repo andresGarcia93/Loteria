@@ -1,4 +1,5 @@
 $(function(){
+
 	$('#registrar').click(function(){
 		if($('#cdg-tkt').val() === '' || $('#nm-cl').val() === ''){
 			alert('Faltan Datos');
