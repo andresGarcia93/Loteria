@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+	<link rel="icon" href="https://p7.hiclipart.com/preview/198/306/477/lottery-progressive-jackpot-keno-slot-machine-gambling-aperture-14-2-8.jpg">
+    <title>Sorteo</title>
+  </head>
+  <body style="background-color: #f1f1f1">
+  	<div class="container py-5">
+		<div class="form-group">
+			<div class="row">
+				<div class="col-12 my-2">
+					<input id="cdg-tkt" type="text" class="form-control" placeholder="Código de ticket">
+				</div>
+				<div class="col-12 my-2">
+					<input id="nm-cl" type="text" class="form-control" placeholder="Nombre del Cliente">
+				</div>
+			</div>
+			<label class="" for="ganadoresQty">Cantidad de Ganadores</label>
+			<input type="number" class="form-control mb-2 col-2" id="ganadoresQty">
+
+			<button id="registrar" type="button" class="my-2 btn btn-primary">Registrar</button>
+			<button id='sortear' type="button" class="my-2 btn btn-success">Sortear</button>
+
+		</div>
+
+		<div id="tickets">
+			<div class="card">
+				<div class="card-body text-capitalize">
+					tickets
+				</div>
+			</div>
+
+		</div>
+		
+		<button id="mostrar" type="button" class="btn btn-primary d-none" data-toggle="modal" data-target="#modalGanador">
+		</button>
+
+		<div class="modal" id="modalGanador" tabindex="-1" role="dialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title text-uppercase ml-auto">Felicidades</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true" id="cierra-modal">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<span id="ganador"></span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+		$(function(){
+			$('#registrar').click(function(){
+				if($('#cdg-tkt').val() === '' || $('#nm-cl').val() === ''){
+					alert('Faltan Datos');
+					return;
+				}
+				$('#tickets').append(
+					'<div id="' + $('#nm-cl').val() + '-' + $('#cdg-tkt').val() + '" class="card">' 
+						+ '<div numero="' + proximoNumero() + '" nombre="' + $('#nm-cl').val() + '" '
+						+ 'ticket="' + $('#cdg-tkt').val() + '" '
+						+ 'class="card-body ticket">' 
+							+ $('#nm-cl').val() + ' - ' + $('#cdg-tkt').val()
+							+ '<button type="button" class="close">'
+								+ '<span aria-hidden="true" cierra="'
+								+ $('#nm-cl').val() + '-' + $('#cdg-tkt').val()
+								+ '">&times;</span>'
+							+ '</button>'
+						+ '</div>' 
+					+ '</div>'
+				);
+				eventos();
+				$('#cdg-tkt').val('');
+				$('#nm-cl').val('');
+			});
+
+			function aleatorio(){
+				var max = $('.ticket').length;
+				return parseInt(Math.random()*(max) + 1);
+			}
+
+			function proximoNumero(){
+				var num = $('.ticket').length;
+
+				if(typeof num === 'undefined')
+					num = 0;
+
+				return ++num;
+			}
+
+			function eventos(){
+				$('.close span').click(function(){
+					$('#' + $(this).attr('cierra')).remove();
+				});
+			}
+
+			function validarRepetidos(nuevo){
+				var band = false;
+				$('#ganador').find('h2').each(function(){
+					console.log($(this).find('strong').text() + ' : ' + nuevo);
+					if($(this).find('strong').text() === nuevo){
+						console.log('true');
+						band = true;
+					}
+				});
+						console.log('false');
+				return band;
+			}
+
+			function getGanadores(){
+				var num = aleatorio();
+				var ganador = $('div[numero="' + num +'"]');
+
+				do{
+					num = aleatorio();
+					ganador = $('div[numero="' + num +'"]');
+				}while(validarRepetidos(ganador.attr('nombre')));
+
+				$('#ganador').append(
+					'<h2 class="d-block py-2 border text-center">' 
+						+ '<strong>'
+							+ ganador.attr('nombre')
+						+ '</strong>'
+						+ ' - '
+						+ '<small class="text-muted">'
+							+ ganador.attr('ticket')
+						+ '</small>'
+					+ '</h2>'
+				);
+
+			}
+
+			$('#sortear').click(function(){
+				if($('.ticket').length <= 1){
+					alert('Ingrese mas clientes para el sorteo');
+					return;
+				}
+				if($('#ganadoresQty').val() === ''){
+					alert('Indique la cantidad de ganadores');
+					return;
+				}
+				if($('#ganadoresQty').val() > $('.ticket').length){
+					alert('La cantidad de ganadores no puede ser mayor a la cantidad de tickets registrados');
+					return;
+				}
+				var cantidadGanadores = $('#ganadoresQty').val();
+				for(var i = 0; i < cantidadGanadores; i++){
+					setTimeout(getGanadores, 2000);
+				}
+				$('#mostrar').trigger('click');
+
+			});
+
+			$('#cierra-modal').click(function(){
+				$('#ganador').html('');
+			});
+
+		});
+    </script>
+  </body>
+</html>
