@@ -79,7 +79,7 @@ $(function(){
 		$('#ganador').append(
 			'<h2 class="d-block py-2 border text-center">' 
 				+ '<strong>'
-					+ '<h4 class="d-inline">' + contador + ' - </h4>'
+					+ '<p class="d-inline">' + ganador.attr('nombre') + ' - </p>'
 					+ ganador.attr('ticket')
 				+ '</strong>'
 			+ '</h2>'
