@@ -9,25 +9,27 @@ $(function(){
 		$('.ticket-item').remove();*/
 
 	$('#registrar').click(function(){
-		if($('#cdg-tkt').val() === ''){
+		if($('#cdg-tkt').val() === '' || $('#nm-cl').val() === ''){
 			alert('Faltan Datos');
 			return;
 		}
 		$('#tickets').append(
-			'<div id="' + $('#cdg-tkt').val() + '" class="card ticket-item">' 
-				+ '<div numero="' + proximoNumero() + '" '
+			'<div id="' + $('#nm-cl').val() + '-' +  $('#cdg-tkt').val() + '" class="card ticket-item">' 
+				+ '<div numero="' + proximoNumero() + '" nombre="' + $('#nm-cl').val() + '" '
 				+ 'ticket="' + $('#cdg-tkt').val() + '" '
 				+ 'class="card-body ticket">' 
-					+ $('#cdg-tkt').val()
+					+ $('#nm-cl').val() + ' - ' + $('#cdg-tkt').val()
 					+ '<button type="button" class="close">'
 						+ '<span aria-hidden="true" cierra="'
-						+ $('#cdg-tkt').val()
+						+ $('#nm-cl').val() + '-' + $('#cdg-tkt').val()
 						+ '">&times;</span>'
 					+ '</button>'
 				+ '</div>' 
 			+ '</div>'
 		);
+		
 		eventos();
+		$('#nm-cl').val('');
 		$('#cdg-tkt').val('');
 	});
 
