@@ -1,19 +1,27 @@
 $(function(){
+	var contador = 0;
+
+	/*if($('#cdg-tkt').val())
+		$('#cdg-tkt').val('');
+	if($('#ganadoresQty').val())
+		$('#ganadoresQty').val('');
+	if($('.ticket-item').length > 1)
+		$('.ticket-item').remove();*/
 
 	$('#registrar').click(function(){
-		if($('#cdg-tkt').val() === '' || $('#nm-cl').val() === ''){
+		if($('#cdg-tkt').val() === ''){
 			alert('Faltan Datos');
 			return;
 		}
 		$('#tickets').append(
-			'<div id="' + $('#nm-cl').val() + '-' + $('#cdg-tkt').val() + '" class="card">' 
-				+ '<div numero="' + proximoNumero() + '" nombre="' + $('#nm-cl').val() + '" '
+			'<div id="' + $('#cdg-tkt').val() + '" class="card ticket-item">' 
+				+ '<div numero="' + proximoNumero() + '" '
 				+ 'ticket="' + $('#cdg-tkt').val() + '" '
 				+ 'class="card-body ticket">' 
-					+ $('#nm-cl').val() + ' - ' + $('#cdg-tkt').val()
+					+ $('#cdg-tkt').val()
 					+ '<button type="button" class="close">'
 						+ '<span aria-hidden="true" cierra="'
-						+ $('#nm-cl').val() + '-' + $('#cdg-tkt').val()
+						+ $('#cdg-tkt').val()
 						+ '">&times;</span>'
 					+ '</button>'
 				+ '</div>' 
@@ -21,7 +29,6 @@ $(function(){
 		);
 		eventos();
 		$('#cdg-tkt').val('');
-		$('#nm-cl').val('');
 	});
 
 	function aleatorio(){
@@ -48,7 +55,7 @@ $(function(){
 		var band = false;
 		$('#ganador').find('h2').each(function(){
 			console.log($(this).find('strong').text() + ' : ' + nuevo);
-			if($(this).find('strong').text() === nuevo){
+			if($(this).find('strong').text().includes(nuevo)){
 				console.log('true');
 				band = true;
 			}
@@ -64,17 +71,15 @@ $(function(){
 		do{
 			num = aleatorio();
 			ganador = $('div[numero="' + num +'"]');
-		}while(validarRepetidos(ganador.attr('nombre')));
+		}while(validarRepetidos(ganador.attr('ticket')));
 
+		contador++;
 		$('#ganador').append(
 			'<h2 class="d-block py-2 border text-center">' 
 				+ '<strong>'
-					+ ganador.attr('nombre')
-				+ '</strong>'
-				+ ' - '
-				+ '<small class="text-muted">'
+					+ '<h3>' + contador + '</h3>'
 					+ ganador.attr('ticket')
-				+ '</small>'
+				+ '</strong>'
 			+ '</h2>'
 		);
 
@@ -93,10 +98,16 @@ $(function(){
 			alert('La cantidad de ganadores no puede ser mayor a la cantidad de tickets registrados');
 			return;
 		}
+		$('#spinner').show();
+		contador = 0;
 		var cantidadGanadores = $('#ganadoresQty').val();
-		for(var i = 0; i < cantidadGanadores; i++){
-			setTimeout(getGanadores, 2000);
-		}
+		setTimeout(function(){
+			$('#spinner').hide();
+			for(var i = 0; i < cantidadGanadores; i++){
+				getGanadores();
+			}
+		}, 2000);
+		
 		$('#mostrar').trigger('click');
 
 	});
