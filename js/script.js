@@ -9,25 +9,45 @@ $(function(){
 		$('.ticket-item').remove();*/
 
 	$('#registrar').click(function(){
-		if($('#cdg-tkt').val() === '' || $('#nm-cl').val() === ''){
+		//if($('#cdg-tkt').val() === '' || $('#nm-cl').val() === ''){
+		if($('#codigos').val() === ''){
 			alert('Faltan Datos');
 			return;
 		}
-		$('#tickets').append(
-			'<div id="' + $('#nm-cl').val() + '-' +  $('#cdg-tkt').val() + '" class="card ticket-item">' 
-				+ '<div numero="' + proximoNumero() + '" nombre="' + $('#nm-cl').val() + '" '
-				+ 'ticket="' + $('#cdg-tkt').val() + '" '
-				+ 'class="card-body ticket">' 
-					+ $('#nm-cl').val() + ' - ' + $('#cdg-tkt').val()
-					+ '<button type="button" class="close">'
-						+ '<span aria-hidden="true" cierra="'
-						+ $('#nm-cl').val() + '-' + $('#cdg-tkt').val()
-						+ '">&times;</span>'
-					+ '</button>'
-				+ '</div>' 
-			+ '</div>'
-		);
+		var sep = $('#codigos').val().split('\n');
+		for (var i = 0; i < sep.length; i++) {
+			console.log(sep[i]);
+			$('#tickets').append(
+				'<div id="' + sep[i] + '-' +  sep[i] + '" class="card ticket-item">' 
+					+ '<div numero="' + proximoNumero() + '" nombre="' + sep[i] + '" '
+					+ 'ticket="' + sep[i] + '" '
+					+ 'class="card-body ticket">' 
+						+ sep[i]
+						+ '<button type="button" class="close">'
+							+ '<span aria-hidden="true" cierra="'
+							+ sep[i] + '-' + sep[i]
+							+ '">&times;</span>'
+						+ '</button>'
+					+ '</div>' 
+				+ '</div>'
+			);
 		
+		}
+
+			/*$('#tickets').append(
+				'<div id="' + $('#nm-cl').val() + '-' +  $('#cdg-tkt').val() + '" class="card ticket-item">' 
+					+ '<div numero="' + proximoNumero() + '" nombre="' + $('#nm-cl').val() + '" '
+					+ 'ticket="' + $('#cdg-tkt').val() + '" '
+					+ 'class="card-body ticket">' 
+						+ $('#nm-cl').val() + ' - ' + $('#cdg-tkt').val()
+						+ '<button type="button" class="close">'
+							+ '<span aria-hidden="true" cierra="'
+							+ $('#nm-cl').val() + '-' + $('#cdg-tkt').val()
+							+ '">&times;</span>'
+						+ '</button>'
+					+ '</div>' 
+				+ '</div>'
+			);*/
 		eventos();
 		$('#nm-cl').val('');
 		$('#cdg-tkt').val('');
@@ -79,11 +99,18 @@ $(function(){
 		$('#ganador').append(
 			'<h2 class="d-block py-2 border text-center">' 
 				+ '<strong>'
+					+ '<p class="d-inline">' + ganador.attr('nombre')
+				+ '</strong>'
+			+ '</h2>'
+		);
+		/*$('#ganador').append(
+			'<h2 class="d-block py-2 border text-center">' 
+				+ '<strong>'
 					+ '<p class="d-inline">' + ganador.attr('nombre') + ' - </p>'
 					+ ganador.attr('ticket')
 				+ '</strong>'
 			+ '</h2>'
-		);
+		);*/
 
 	}
 
